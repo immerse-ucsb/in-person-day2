@@ -135,7 +135,7 @@ Load data
 
 ```{r, eval=TRUE}
 
-lsay_data <- read_csv(here("lab4", "data", "lca_lsay_sci.csv"), na = c("9999", "9999.00")) %>%          
+lsay_data <- read_csv(here("lab5", "data", "lca_lsay_sci.csv"), na = c("9999", "9999.00")) %>%          
   clean_names() %>%                                                                             
   dplyr::select(1:5, female, math_irt = mathg12,                                                  
          enjoy = ab39m,useful = ab39t,                                                             
@@ -156,7 +156,7 @@ summary(lsay_data)
 
 ------------------------------------------------------------------------
 
-```{r, cache =TRUE}
+```{r, eval = FALSE}
 
 step1_bch  <- mplusObject(
   TITLE = "Step 1 - Three-Step - BCH Method", 
@@ -190,8 +190,8 @@ step1_bch  <- mplusObject(
   rdata = lsay_data)
 
 step1_fit_bch <- mplusModeler(step1_bch,
-                            dataout=here("lab4", "manual", "Step1.dat"),
-                            modelout=here("lab4", "manual", "bch_one.inp") ,
+                            dataout=here("lab5", "bch", "Step1.dat"),
+                            modelout=here("lab5", "bch", "bch_one.inp") ,
                             check=TRUE, run = TRUE, hashfilename = FALSE)
 ```
 
@@ -204,7 +204,7 @@ step1_fit_bch <- mplusModeler(step1_bch,
 Extract saved dataset which is part of the mplusObject "step1_fit_bch"
 
 ```{r}
-output_bch <- readModels(here("lab4" ,"manual","bch_one.out"))
+output_bch <- readModels(here("lab5" ,"bch","bch_one.out"))
 
 savedata <- as.data.frame(output_bch[["savedata"]])
 ```
@@ -226,7 +226,7 @@ colnames(savedata)[colnames(savedata)=="C"] <- "N"
 
 Model with 1 covariate and 1 distal outcome
 
-```{r, cache = TRUE}
+```{r, eval = FALSE}
 step3_bch  <- mplusObject(
   TITLE = "Step3 - 3step LSAY - BCH Method", 
   
@@ -248,6 +248,7 @@ step3_bch  <- mplusObject(
   glue(
  " %OVERALL%
   
+  math_irt on female; ! covariate as a predictor of the distal outcome
   C on female;      ! covariate as predictor of C
 
   %C#1%
@@ -290,8 +291,8 @@ step3_bch  <- mplusObject(
   rdata = savedata)
 
 step3_fit_bch <- mplusModeler(step3_bch,
-               dataout=here("lab4","manual","Step3.dat"), 
-               modelout=here("lab4","manual", "bch_three.inp"), 
+               dataout=here("lab5","bch","Step3.dat"), 
+               modelout=here("lab5","bch", "bch_three.inp"), 
                check=TRUE, run = TRUE, hashfilename = FALSE)
 ```
 
