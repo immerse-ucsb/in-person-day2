@@ -1,11 +1,11 @@
 Mplus VERSION 8.8
 MUTHEN & MUTHEN
-06/05/2023   8:58 PM
+06/05/2023   9:00 PM
 
 INPUT INSTRUCTIONS
 
   TITLE:
-  Step 1 - Three-Step using LSAL
+  Step 1 - Three-Step - BCH Method
   DATA:
   FILE = "Step1.dat";
 
@@ -28,7 +28,8 @@ INPUT INSTRUCTIONS
   residual tech11 tech14
   SAVEDATA:
   File=3step_savedata.dat;
-      Save=cprob;
+      Save=bchweights; ! Here we save the BCH weights
+      format = free;
   PLOT:
   type = plot3;
       series = enjoy-adult(*);
@@ -40,7 +41,7 @@ INPUT READING TERMINATED NORMALLY
 
 
 
-Step 1 - Three-Step using LSAL
+Step 1 - Three-Step - BCH Method
 
 SUMMARY OF ANALYSIS
 
@@ -624,23 +625,26 @@ SAVEDATA INFORMATION
   Save file
     3step_savedata.dat
 
-  Order and format of variables
+  Order of variables
 
-    ENJOY          F10.3
-    USEFUL         F10.3
-    LOGICAL        F10.3
-    JOB            F10.3
-    ADULT          F10.3
-    FEMALE         F10.3
-    MATH_IRT       F10.3
-    CPROB1         F10.3
-    CPROB2         F10.3
-    CPROB3         F10.3
-    CPROB4         F10.3
-    C              F10.3
+    ENJOY
+    USEFUL
+    LOGICAL
+    JOB
+    ADULT
+    FEMALE
+    MATH_IRT
+    BCHW1
+    BCHW2
+    BCHW3
+    BCHW4
+    CPROB1
+    CPROB2
+    CPROB3
+    CPROB4
+    C
 
-  Save file format
-    12F10.3
+  Save file format           Free
 
   Save file record length    10000
 
@@ -653,9 +657,9 @@ DIAGRAM INFORMATION
   No diagram output was produced.
 
 
-     Beginning Time:  20:58:13
-        Ending Time:  20:58:29
-       Elapsed Time:  00:00:16
+     Beginning Time:  21:00:38
+        Ending Time:  21:00:55
+       Elapsed Time:  00:00:17
 
 
 
