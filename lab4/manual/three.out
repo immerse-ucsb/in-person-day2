@@ -1,6 +1,6 @@
 Mplus VERSION 8.8
 MUTHEN & MUTHEN
-06/05/2023   8:59 PM
+06/07/2023  12:11 PM
 
 INPUT INSTRUCTIONS
 
@@ -26,7 +26,7 @@ INPUT INSTRUCTIONS
   %OVERALL%
 
   math_irt on female; ! covariate as a predictor of the distal outcome
-  C on female;        ! covariate as predictor of C
+  C on female (f1-f3);        ! covariate as predictor of C
 
      %C#1%
   [n#1@7.784]; ! MUST EDIT if you do not have a 4-class model.
@@ -74,6 +74,10 @@ INPUT INSTRUCTIONS
       m1=m2;
       m2=m3;
       m3=m4;
+      !f1=f2;
+      !f2=f3;
+      !f3=f4;
+
 
 
 
@@ -511,8 +515,8 @@ DIAGRAM INFORMATION
   No diagram output was produced.
 
 
-     Beginning Time:  20:59:33
-        Ending Time:  20:59:33
+     Beginning Time:  12:11:43
+        Ending Time:  12:11:43
        Elapsed Time:  00:00:00
 
 

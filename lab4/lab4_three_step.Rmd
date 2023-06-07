@@ -200,10 +200,10 @@ step1_fit <- mplusModeler(step1,
 
 
 ```{r, fig.height=6, fig.width=10}
-source("plot_lca_function.txt")
+source("plot_lca.txt")
 output_lsay <- readModels(here("lab4" ,"manual","one.out"))
 
-plot_lca_function(model_name = output_lsay)
+plot_lca(model_name = output_lsay)
 ```
 
 ------------------------------------------------------------------------
@@ -212,7 +212,7 @@ plot_lca_function(model_name = output_lsay)
 
 ------------------------------------------------------------------------
 
-Extract logits for the classification probabilities for the most likely latent class
+Extract logits for the classification probabilities for the most likely latent class:
 
 ```{r}
 
@@ -220,7 +220,7 @@ logit_cprobs <- as.data.frame(output_lsay[["class_counts"]]
                                        [["logitProbs.mostLikely"]])
 ```
 
-Extract saved dataset which is part of the mplusObject "step1_fit"
+Extract saved dataset:
 
 ```{r}
 
@@ -265,7 +265,7 @@ step3  <- mplusObject(
  " %OVERALL%
   
   math_irt on female; ! covariate as a predictor of the distal outcome
-  C on female;        ! covariate as predictor of C
+  C on female (f1-f3);        ! covariate as predictor of C
 
      %C#1%
   [n#1@{logit_cprobs[1,1]}]; ! MUST EDIT if you do not have a 4-class model. 
@@ -299,6 +299,16 @@ step3  <- mplusObject(
   [math_irt](m4);
   math_irt; "),
   
+  MODELTEST = "     ! omnibus test of distal means
+    m1=m2;
+    m2=m3;
+    m3=m4;
+    !f1=f2;
+    !f2=f3;
+    !f3=f4;
+ ",
+ 
+ 
   MODELCONSTRAINT = 
    "New (diff12 diff13 diff23 
     diff14 diff24 diff34);
@@ -308,12 +318,7 @@ step3  <- mplusObject(
     diff23 = m2-m3;
     diff14 = m1-m4;
     diff24 = m2-m4;
-    diff34 = m3-m4;",
-  
-  MODELTEST = "     ! omnibus test of distal means
-    m1=m2;
-    m2=m3;
-    m3=m4;",
+    diff34 = m3-m4;", 
  
   usevariables = colnames(savedata), 
   rdata = savedata)
@@ -326,11 +331,40 @@ step3_fit <- mplusModeler(step3,
 
 ------------------------------------------------------------------------
 
-### Table of Distal Outcome Differences
+### Wald Test Table
 
 ```{r}
 modelParams <- readModels(here("lab4","manual", "three.out"))
 
+# Extract information as data frame
+wald <- as.data.frame(modelParams[["summaries"]]) %>%
+  dplyr::select(WaldChiSq_Value:WaldChiSq_PValue) %>% 
+  mutate(WaldChiSq_DF = paste0("(", WaldChiSq_DF, ")")) %>% 
+  unite(wald_test, WaldChiSq_Value, WaldChiSq_DF, sep = " ") %>% 
+  rename(pval = WaldChiSq_PValue) %>% 
+  mutate(pval = ifelse(pval<0.001, paste0("<.001*"),
+                       ifelse(pval<0.05, paste0(scales::number(pval, accuracy = .001), "*"),
+                              scales::number(pval, accuracy = .001))))
+
+# Create table
+
+wald %>% 
+  gt() %>%
+    tab_header(
+    title = "Wald Test of Paramter Constraints (Math)") %>%
+    cols_label(
+      wald_test = md("Wald Test (*df*)"),
+      pval = md("*p*-value")) %>% 
+  cols_align(align = "center") %>% 
+  opt_align_table_header(align = "left") %>% 
+  gt::tab_options(table.font.names = "serif")
+```
+
+------------------------------------------------------------------------
+
+### Table of Distal Outcome Differences
+
+```{r}
 # Extract information as data frame
 diff <- as.data.frame(modelParams[["parameters"]][["unstandardized"]]) %>%
   filter(grepl("DIFF", param)) %>% 
