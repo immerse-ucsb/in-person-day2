@@ -308,7 +308,6 @@ step3  <- mplusObject(
     !f3=f4;
  ",
  
- 
   MODELCONSTRAINT = 
    "New (diff12 diff13 diff23 
     diff14 diff24 diff34);
